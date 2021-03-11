@@ -23,7 +23,7 @@ timeout {
 
 depends_on = [
   aws_cloudwatch_log_group.eks_cluster,
-  aws_iam_policy_attachment.AmazonEKSClusterPolicy
+  aws_iam_policy_attachment.AmazonEKSClusterPolicy, 
   aws_iam_policy_attachment.AmazonEKSServicePolicy,
 ]
 
