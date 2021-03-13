@@ -8,6 +8,7 @@ apply() {
         -state=terraform/states/terraform.tfstate \
         -state-out=terraform/states/terraform.tfstate \
         -backup=terraform/states/terraform.tfstate.backup \
+        $* \
         terraform/
 }
 
