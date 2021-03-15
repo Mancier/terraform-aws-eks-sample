@@ -1,7 +1,6 @@
 #
 # Outputs
 #
-
 locals {
   config_map_aws_auth = <<CONFIGMAPAWSAUTH
 
@@ -13,7 +12,7 @@ metadata:
   namespace: kube-system
 data:
   mapRoles: |
-    - rolearn: ${aws_iam_role.worker-node.arn}
+    - rolearn: ${aws_iam_role.pods.arn}
       username: system:node:{{EC2PrivateDNSName}}
       groups:
         - system:bootstrappers
@@ -46,7 +45,7 @@ users:
       args:
         - "token"
         - "-i"
-        - "${var.cluster-name}"
+        - "${var.cluter_name}"
 KUBECONFIG
 }
 

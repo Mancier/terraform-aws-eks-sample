@@ -4,8 +4,8 @@
 #  * EKS Node Group to launch worker nodes
 #
 
-resource "aws_iam_role" "worker-node" {
-  name = "terraform-eks-worker-node"
+resource "aws_iam_role" "pods" {
+  name = "${var.cluster_name}-pods"
 
   assume_role_policy = <<POLICY
 {
@@ -25,24 +25,24 @@ POLICY
 
 resource "aws_iam_role_policy_attachment" "worker-node-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.worker-node.name
+  role       = aws_iam_role.pods.name
 }
 
 resource "aws_iam_role_policy_attachment" "worker-node-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.worker-node.name
+  role       = aws_iam_role.pods.name
 }
 
 resource "aws_iam_role_policy_attachment" "worker-node-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.worker-node.name
+  role       = aws_iam_role.pods.name
 }
 
 resource "aws_eks_node_group" "demo" {
   cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "workers"
-  node_role_arn   = aws_iam_role.worker-node.arn
-  subnet_ids      = aws_subnet.eks[*].id
+  node_group_name = "${var.cluster_name}-pods"
+  node_role_arn   = aws_iam_role.pods.arn
+  subnet_ids      = aws_subnet.public_subnet[*].id
   instance_types  = var.worker_type
 
 
