@@ -35,9 +35,9 @@ resource "aws_iam_role_policy_attachment" "eks-cluster-AmazonEKSVPCResourceContr
 }
 
 resource "aws_security_group" "default" {
-  name = "${var.cluster_name}-${var.environment}-default-sg"
-  vpc_id = "${aws_vpc.vpc.id}"
-  depends_on = [ aws_vpc.vpc ]
+  name        = "${var.cluster_name}-${var.environment}-default-sg"
+  vpc_id      = aws_vpc.vpc.id
+  depends_on  = [ aws_vpc.vpc ]
 
   ingress {
     from_port = "0"
@@ -65,7 +65,7 @@ resource "aws_security_group" "default" {
 } */
 
 resource "aws_eks_cluster" "eks" {
-  name     = "${var.cluter_name}"
+  name     = var.cluster_name
   role_arn = aws_iam_role.eks.arn
 
 
