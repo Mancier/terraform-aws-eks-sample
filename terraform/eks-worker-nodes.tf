@@ -38,7 +38,7 @@ resource "aws_iam_role_policy_attachment" "worker-node-AmazonEC2ContainerRegistr
   role       = aws_iam_role.pods.name
 }
 
-resource "aws_eks_node_group" "demo" {
+resource "aws_eks_node_group" "pods" {
   cluster_name    = aws_eks_cluster.eks.name
   node_group_name = "${var.cluster_name}-pods"
   node_role_arn   = aws_iam_role.pods.arn
@@ -50,6 +50,10 @@ resource "aws_eks_node_group" "demo" {
     desired_size = 1
     max_size     = 3
     min_size     = 1
+  }
+
+  lifecycle {
+    ignore_changes = [scaling_config.0.desired_size]
   }
 
   depends_on = [

@@ -1,11 +1,12 @@
 provider "aws" {
   region = var.aws_region
+  # access_key = var.access_key
+  # secret_key = var.secret_key
 }
 
-data "aws_availability_zones" "available" {}
-
-# Not required: currently used in conjunction with using
-# icanhazip.com to determine local workstation external IP
-# to open EC2 Security Group access to the Kubernetes cluster.
-# See workstation-external-ip.tf for additional information.
-provider "http" {}
+data "aws_availability_zones" "available" {
+  filter {
+    name   = "zone-name"
+    values = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
+  }
+}

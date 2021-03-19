@@ -23,7 +23,7 @@ resource "aws_internet_gateway" "igw" {
 
   tags = {
     Name = "${var.cluster_name}-igw"
-    Enviroment = "${var.environment}"
+    Enviroment = var.environment
   }
 }
 
@@ -33,12 +33,12 @@ resource "aws_eip" "eip" {
 }
 
 resource "aws_nat_gateway" "ngw" {
-  allocation_id   = "${aws_eip.eip.id}"
-  subnet_id       = "${element(aws_subnet.public_subnet.*.id, 0)}"
+  allocation_id   = aws_eip.eip.id
+  subnet_id       = element(aws_subnet.public_subnet.*.id, 0)
   depends_on      = [ aws_internet_gateway.igw ]
   tags = {
     "Name" = "${var.cluster_name}-${var.environment}-ngw"
-    "Environment" = "${var.environment}"
+    "Environment" = var.environment
   }
 }
 
@@ -80,13 +80,13 @@ resource "aws_route_table" "public" {
 resource "aws_route" "public_igw" {
   route_table_id          = "${aws_route_table.public.id}"
   gateway_id              = "${aws_internet_gateway.igw.id}"
-  # destination_cidr_block  = "0.0.0.0/0"
+  destination_cidr_block  = "0.0.0.0/0"
 }
 
 resource "aws_route" "private_igw" {
-  route_table_id          = "${aws_route_table.private.id}"
-  nat_gateway_id          = "${aws_nat_gateway.ngw.id}"
-  destination_cidr_block  = "0.0.0.0/0"
+  route_table_id  = aws_route_table.private.id
+  nat_gateway_id  = aws_nat_gateway.ngw.id
+  destination_cidr_block = "0.0.0.0/0"
 }
 
 resource "aws_route_table_association" "public_rta" {
