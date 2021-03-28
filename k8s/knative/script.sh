@@ -3,19 +3,19 @@
 ACTION=${1:-"apply"}
 set -e
 
-if [[ ! $ACTION =~ /apply|destroy/ ]]; then
+if [[ $ACTION =~ /apply/ || $ACTION =~ /destroy/ ]]; then
   echo "Invalid action \n Action should be apply or destroy only"
   exit 1
 fi
 
 echo "Creations serving customer resources..."
-kubectl apply --file serving-crds.yaml
+kubectl ${ACTION} -f serving-crds.yaml 1>/dev/null 2>/dev/stderr
 
 echo "Creating serving core..."
-kubectl apply --file serving-core.yaml
+kubectl $ACTION -f serving-core.yaml 1>/dev/null 2>/dev/stderr
 
 echo "Starting istio pilot and control plane"
-kubectl apply --file istio/pilot.yaml
-kubectl apply --file istio/control-plane.yaml
+kubectl $ACTION -f istio/pilot.yaml 1>/dev/null 2>/dev/stderr
+kubectl $ACTION -f istio/control-plane.yaml 1>/dev/null 2>/dev/stderr
 
 [[ $? ]] && echo "Done!" || echo "Something wrong happend..."
