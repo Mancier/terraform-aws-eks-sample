@@ -11,6 +11,7 @@ apply() {
         -var-file="./terraform/secrets.tfvars" \
         $*  \
         terraform/
+        -auto-approve
 }
 
 apply
