@@ -44,3 +44,7 @@ variable "private_subnet_cidr" {
   description = "CIDR of public subnet ips"
   default     = ["10.0.48.0/22","10.0.64.0/22", "10.0.80.0/22"]
 }
+
+variable "access_key" {}
+
+variable "secret_key" {}
