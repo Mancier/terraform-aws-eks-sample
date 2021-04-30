@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
+set -xe
 ACTION=${1:-up}
+shift
 do_up() {
     echo "Executing terraform init"
     terraform init terraform/
@@ -26,10 +28,12 @@ do_down(){
     terraform/
 }
 
-if [[ $ACTION =~ /apply|up/ ]]; then
-  do_up
-elif [[ $ACTION =~ /destroy|down/ ]]; then
-  do_down
+if [[ "$ACTION" =~ "up|apply" ]] ;  then
+  do_up $*
+  exit 0
+elif [[ "$ACTION" =~ "down|destroy" ]];  then
+  do_down $*
+  exit 0
 else
   echo "Invalid action! Plese use apply/destroy"
   exit 1
