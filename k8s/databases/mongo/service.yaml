@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-svc
+  namespace: databases
+spec:
+  selector:
+    app: mongo
+  ports:
+  - port: 8081
+    targetPort: 8081
+    name: mongo-port
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-dpt
+  namespace: databases
+  labels:
+    app: mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec: 
+      containers:
+      - image: mongo-express:8
+        name: mongodb
+        ports:
+        - name: mongo
+          containerPort: 8081
+          protocol: TCP
+        env:
+          - name:  MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name:  mysql-root-password
+                key:  password
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-storage
+        emptyDir: {}
