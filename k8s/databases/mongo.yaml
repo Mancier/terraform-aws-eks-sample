@@ -11,6 +11,19 @@ spec:
     targetPort: 8081
     name: mongo-port
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pv-claim
+  namespace: databases
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,21 +42,22 @@ spec:
         app: mongo
     spec: 
       containers:
-      - image: mongo-express:8
+      - image: mongo:bionic
         name: mongodb
         ports:
         - name: mongo
           containerPort: 8081
           protocol: TCP
         env:
-          - name:  MYSQL_ROOT_PASSWORD
+          - name:  MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name:  mysql-root-password
+                name:  mongodb-initdb-root-password
                 key:  password
         volumeMounts:
-        - name: mysql-storage
-          mountPath: /var/lib/mysql
+        - name: mongo-persistent-storage
+          mountPath: /data/db
       volumes:
-      - name: mysql-storage
-        emptyDir: {}
+      - name: mongo-persistent-storage
+        persistentVolumeClaim:
+            claimName: mongo-pv-claim
