@@ -7,7 +7,7 @@ spec:
   selector:
     app: mysql
   ports:
-  - port: 12306
+  - port: 11306
     targetPort: 3306
     name: mysql-port
 ---
@@ -17,7 +17,6 @@ metadata:
   name: mysql-pv-claim
   namespace: databases
 spec:
-  storageClassName: rook-ceph-block
   accessModes:
     - ReadWriteOnce
   resources:
@@ -35,7 +34,7 @@ spec:
   selector:
     matchLabels:
       app: mysql
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -47,8 +46,17 @@ spec:
         ports:
         - name: mysql
           containerPort: 3306
-          protocol: TCP
         env:
+          - name:  MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name:  mysql-admin-password
+                key:  admin
+          - name:  MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name:  mysql-admin-password
+                key:  password
           - name:  MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:

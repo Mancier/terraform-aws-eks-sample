@@ -7,8 +7,8 @@ spec:
   selector:
     app: mongo
   ports:
-  - port: 8081
-    targetPort: 8081
+  - port: 27017
+    targetPort: 27019
     name: mongo-port
 ---
 apiVersion: v1
@@ -17,7 +17,6 @@ metadata:
   name: mongo-pvc
   namespace: databases
 spec:
-  storageClassName: rook-ceph-block
   accessModes:
     - ReadWriteOnce
   resources:
@@ -48,10 +47,15 @@ spec:
         - name: mongo
           containerPort: 27017
         env:
+          - name:  MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name:  mongodb-initdb
+                key:  user
           - name:  MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name:  mongodb-initdb-root-password
+                name:  mongodb-initdb
                 key:  password
         volumeMounts:
         - name: mongo-persistent-storage
