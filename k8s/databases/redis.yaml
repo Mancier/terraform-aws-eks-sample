@@ -76,7 +76,8 @@ metadata:
   name: redis
   namespace: databases
 spec:
-  type: ClusterIP
+  type: ExternalName
+  externalName: redis.databases.svc.cluster.local
   ports:
   - port: 6379
     targetPort: 6379
