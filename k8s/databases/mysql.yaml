@@ -4,6 +4,8 @@ metadata:
   name: mysql
   namespace: databases
 spec:
+  type: ExternalName
+  externalName: mysql.databases.svc.cluster.local
   selector:
     app: mysql
   ports:

@@ -4,6 +4,8 @@ metadata:
   name: mongo
   namespace: databases
 spec:
+  type: ExternalName
+  externalName: mongo.databases.svc.cluster.local
   selector:
     app: mongo
   ports:
