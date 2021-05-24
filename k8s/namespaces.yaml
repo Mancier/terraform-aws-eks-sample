@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   managedFields:
     - apiVersion: v1
-  name: devlopment
+  name: development
 spec:
   finalizers:
     - kubernetes
@@ -28,6 +28,18 @@ metadata:
   managedFields:
     - apiVersion: v1
   name: toolbox
+spec:
+  finalizers:
+    - kubernetes
+status:
+  phase: Active
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  managedFields:
+    - apiVersion: v1
+  name: databases
 spec:
   finalizers:
     - kubernetes
