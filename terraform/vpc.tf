@@ -12,10 +12,10 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames  = true
   enable_dns_support    = true 
 
-  tags = map(
-    "Name", "${var.cluster_name}-${var.environment}-vpc",
-    "kubernetes.io/cluster/${var.cluster_name}", "shared",
-  )
+  tags = tomap({
+    "Name"  = "${var.cluster_name}-${var.environment}-vpc",
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+  })
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -49,10 +49,10 @@ resource "aws_subnet" "public_subnet" {
   map_public_ip_on_launch = true
   vpc_id                  = aws_vpc.vpc.id
 
-  tags = map(
-    "Name", "${var.cluster_name}-${var.environment}-sbn-public-${count.index}",
-    "kubernetes.io/cluster/${var.cluster_name}", "shared",
-  )
+  tags = tomap({
+    "Name"  = "${var.cluster_name}-${var.environment}-sbn-public-${count.index}",
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared",
+  })
 }
 
 
@@ -63,10 +63,10 @@ resource "aws_subnet" "private_subnet" {
   map_public_ip_on_launch = false
   vpc_id                  = aws_vpc.vpc.id
 
-  tags = map(
-    "Name", "${var.cluster_name}-${var.environment}-sbn-public-${count.index}",
-    "kubernetes.io/cluster/${var.cluster_name}", "shared",
-  )
+  tags = tomap({
+    "Name"  = "${var.cluster_name}-${var.environment}-sbn-public-${count.index}",
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared",
+  })
 }
 
 resource "aws_route_table" "private" {
