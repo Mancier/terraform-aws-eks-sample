@@ -1395,7 +1395,8 @@ metadata:
     knative.dev/example-checksum: "74c3fc6a"
 data:
   # Domain Config
-  minikube.host: ""
+  # minikube.host: ""
+  knative.digisac.io: ""
   _example: |
     ################################
     #                              #
