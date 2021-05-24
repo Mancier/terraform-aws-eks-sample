@@ -1,7 +1,13 @@
-# EKS Getting Started Guide Configuration
+# Desenvolvimento e implementação de um sistema Function-as-a-Service usando Knative
 
-This is the full configuration from https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html
+| Data | Autor | Versao | 
+| :---: | :---: | ---: |
+| 24/05/21 | Victor Augusto | v1.0.0 |
+---
 
-See that guide for additional information.
+## Introdução
+Esse projeto consiste no desenvolvimento e implementação de cluster Kubernetes e Knative para provisionamento de uma infraestrutura serveless.
+Um dos principais problemas do serveless é a ideia do vendo lock-in, ou seja, você fica preso ao provider que lhe oferece o serviço serverless. E como uma alternativa a isso tem-se o knative, que permite usufruir de todos os beneficios de uma aplicação serverless, sem correr o risco do vendor lock.
 
-NOTE: This full configuration utilizes the [Terraform http provider](https://www.terraform.io/docs/providers/http/index.html) to call out to icanhazip.com to determine your local workstation external IP for easily configuring EC2 Security Group access to the Kubernetes servers. Feel free to replace this as necessary.
+## Projeto
+O projeto foi desenvolvido em conjunto com a Unisagrado e a Ikatec e orientado pelo Me. Henrique Martins.
