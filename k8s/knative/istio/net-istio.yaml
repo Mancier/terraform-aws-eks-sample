@@ -104,7 +104,7 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - "localhost"
+        - "*"
 ---
 apiVersion: v1
 kind: Service
@@ -303,8 +303,8 @@ metadata:
     serving.knative.dev/release: "v0.21.0"
     networking.knative.dev/ingress-provider: istio
 data:
-  #gateway.knative-serving.knative-ingress-gateway: "istio-ingressgateway..knative.digisac.io"
-  local-gateway.knative-serving.knative-local-gateway: "knative-local-gateway.istio-system.minikube.host"
+  gateway.knative-serving.knative-ingress-gateway: "istio-ingressgateway.istio-system.knative.digisac.io"
+  #local-gateway.knative-serving.knative-local-gateway: "knative-local-gateway.istio-system.minikube.host"
   local-gateway.mesh: "mesh"
 
   _example: |
