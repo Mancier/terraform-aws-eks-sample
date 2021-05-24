@@ -4405,7 +4405,7 @@ metadata:
   name: istio-ingressgateway
   namespace: istio-system
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: istio-ingressgateway
@@ -4565,8 +4565,8 @@ spec:
               cpu: 3000m
               memory: 2048Mi
             requests:
-              cpu: 1000m
-              memory: 1024Mi
+              cpu: 500m
+              memory: 512Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
