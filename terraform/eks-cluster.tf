@@ -24,6 +24,28 @@ resource "aws_iam_role" "eks" {
 POLICY
 }
 
+resource "aws_iam_policy" "AmazonEKSClusterAutoscalerPolicy" {
+  name  = "AmazonEKSClusterAutoscalerPolicy"
+  path  = "/"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Action": [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DescribeLaunchConfigurations",
+          "autoscaling:DescribeTags",
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup",
+          "ec2:DescribeLaunchTemplateVersions"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    }]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "eks-cluster-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.eks.name
@@ -31,6 +53,11 @@ resource "aws_iam_role_policy_attachment" "eks-cluster-AmazonEKSClusterPolicy" {
 
 resource "aws_iam_role_policy_attachment" "eks-cluster-AmazonEKSVPCResourceController" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.eks.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks-cluster-AmazonEKSClusterAutoscalerPolicy" {
+  policy_arn = aws_iam_policy.AmazonEKSClusterAutoscalerPolicy.arn
   role       = aws_iam_role.eks.name
 }
 
@@ -54,19 +81,20 @@ resource "aws_security_group" "default" {
   }
 }
 
-/* resource "aws_security_group_rule" "eks-ingress-workstation-https" {
+/*resource "aws_security_group_rule" "eks-ingress-workstation-https" {
   cidr_blocks       = [local.workstation-external-cidr]
   description       = "Allow workstation to communicate with the cluster API Server"
   from_port         = 443
   protocol          = "tcp"
-  security_group_id = aws_security_group.eks.id
+  security_group_id = aws_security_group.default.id
   to_port           = 443
   type              = "ingress"
-} */
+}*/
 
 resource "aws_eks_cluster" "eks" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks.arn
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
 
   vpc_config {
@@ -77,5 +105,12 @@ resource "aws_eks_cluster" "eks" {
   depends_on = [
     aws_iam_role_policy_attachment.eks-cluster-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.eks-cluster-AmazonEKSVPCResourceController,
+    aws_iam_role_policy_attachment.eks-cluster-AmazonEKSClusterAutoscalerPolicy 
   ]
+}
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = []
+  url             = aws_eks_cluster.eks.identity.0.oidc.0.issuer
 }
