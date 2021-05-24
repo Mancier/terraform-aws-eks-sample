@@ -3,12 +3,12 @@ variable "aws_region" {
 }
 
 variable "cluster_name" {
-  default = "terraform-eks"
+  default = "knative-project"
   type    = string
 }
 
 variable "worker_type" {
-  default     = [ "t2.micro" ]
+  default     = [ "m5a.xlarge", "t2.micro" ]
   description = "instance type for workers"
 }
 
