@@ -21,7 +21,7 @@ do_down(){
     -state=terraform/states/terraform.tfstate \
     -state-out=terraform/states/terraform.tfstate \
     -backup=terraform/states/terraform.tfstate.backup \
-    -var-file="./terraform/secrets.tfvars" \
+    -var-file="./secrets.tfvars" \
     -auto-approve
 }
 
