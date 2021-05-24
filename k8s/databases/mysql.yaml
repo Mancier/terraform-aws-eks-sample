@@ -1,24 +1,24 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-svc
+  name: mysql
   namespace: databases
 spec:
   selector:
     app: mysql
   ports:
-  - port: 11306
+  - port: 3306
     targetPort: 3306
     name: mysql-port
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim
+  name: mysql
   namespace: databases
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
@@ -26,7 +26,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql-dpt
+  name: mysql
   namespace: databases
   labels:
     app: mysql
@@ -43,29 +43,19 @@ spec:
       containers:
       - image: mysql:8
         name: mysql
-        ports:
-        - name: mysql
-          containerPort: 3306
         env:
-          - name:  MYSQL_USER
-            valueFrom:
-              secretKeyRef:
-                name:  mysql-admin-password
-                key:  admin
-          - name:  MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name:  mysql-admin-password
-                key:  password
           - name:  MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
                 name:  mysql-root-password
                 key:  password
+        ports:
+        - containerPort: 3306
+          name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
-            claimName: mysql-pv-claim
+            claimName: mysql
