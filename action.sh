@@ -1,37 +1,34 @@
 #! /usr/bin/env bash
 set -xe
+
 ACTION=${1:-up}
-shift
+
 do_up() {
     echo "Executing terraform init"
-    terraform init terraform/
+    terraform -chdir=./terraform init
 
     echo "Starting terraform apply..."
-    terraform apply \
+    terraform -chdir=./terraform apply \
         -state=terraform/states/terraform.tfstate \
         -state-out=terraform/states/terraform.tfstate \
         -backup=terraform/states/terraform.tfstate.backup \
-        -var-file="./terraform/secrets.tfvars" \
-        -auto-approve \
-        $* \
-        terraform/
+        -var-file="./secrets.tfvars" \
+        -auto-approve
 }
 
 do_down(){
-  terraform destroy \
+  terraform -chdir=./terraform destroy \
     -state=terraform/states/terraform.tfstate \
     -state-out=terraform/states/terraform.tfstate \
     -backup=terraform/states/terraform.tfstate.backup \
     -var-file="./terraform/secrets.tfvars" \
-    -auto-approve \
-    $* \
-    terraform/
+    -auto-approve
 }
 
-if [[ "$ACTION" =~ "up|apply" ]] ;  then
+if [[ "$ACTION" =~ "up" ]] ;  then
   do_up $*
   exit 0
-elif [[ "$ACTION" =~ "down|destroy" ]];  then
+elif [[ "$ACTION" =~ "down" ]];  then
   do_down $*
   exit 0
 else
