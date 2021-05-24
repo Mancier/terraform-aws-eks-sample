@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: helloworld
+  namespace: production
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/knative-samples/helloworld-go
+          name: hello-word
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TARGET
+              value: "message"

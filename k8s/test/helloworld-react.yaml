@@ -1,0 +1,13 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: development
+spec:
+  template:
+    spec:
+      containers:
+        - image: mancier21/hello-world-react
+          name: front
+          ports:
+            - containerPort: 8080
+---
