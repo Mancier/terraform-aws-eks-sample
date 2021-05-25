@@ -11,3 +11,19 @@ Um dos principais problemas do serveless é a ideia do vendo lock-in, ou seja, v
 
 ## Projeto
 O projeto foi desenvolvido em conjunto com a Unisagrado e a Ikatec e orientado pelo Me. Henrique Martins.
+
+## Hands On
+` export KUBECONFIG=~/.kube/knative-project` 
+
+```bash
+# Hello Workload
+kubectl apply --filename ./k8s/test/helloworld.yaml
+```
+
+```bash 
+# Deploy usando knative
+kn service create front --namespace development --image=mancier21/hello-world-react
+
+kn service create front --namespace production --image=mancier21/hello-world-react
+```
+
